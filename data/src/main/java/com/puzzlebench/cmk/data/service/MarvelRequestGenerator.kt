@@ -1,6 +1,10 @@
 package com.puzzlebench.cmk.data.service
 
 import com.puzzlebench.cmk.data.BuildConfig
+import com.puzzlebench.cmk.data.service.MarvelRequestGenerator.Companion.MD5_ALGORITHM
+import com.puzzlebench.cmk.data.service.MarvelRequestGenerator.Companion.PAD_CHAR
+import com.puzzlebench.cmk.data.service.MarvelRequestGenerator.Companion.RADIX_VALUE
+import com.puzzlebench.cmk.data.service.MarvelRequestGenerator.Companion.STRING_LENGTH
 import com.puzzlebench.cmk.data.service.api.MarvelApi
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -10,7 +14,14 @@ import java.math.BigInteger
 import java.security.MessageDigest
 
 
-class MarvelResquestGenerator {
+class MarvelRequestGenerator {
+    companion object {
+        const val MD5_ALGORITHM = "MD5"
+        const val RADIX_VALUE = 16
+        const val STRING_LENGTH = 16
+        const val PAD_CHAR = '0'
+    }
+
     private val HASH_ARG = "hash"
     private val PUBLIC_API_KEY_ARG = "apikey"
     private val TS = "ts"
@@ -54,6 +65,6 @@ class MarvelResquestGenerator {
 }
 
 private fun String.md5(): String {
-    val md = MessageDigest.getInstance("MD5")
-    return BigInteger(1, md.digest(toByteArray())).toString(16).padStart(32, '0')
+    val md = MessageDigest.getInstance(MD5_ALGORITHM)
+    return BigInteger(1, md.digest(toByteArray())).toString(RADIX_VALUE).padStart(STRING_LENGTH, PAD_CHAR)
 }

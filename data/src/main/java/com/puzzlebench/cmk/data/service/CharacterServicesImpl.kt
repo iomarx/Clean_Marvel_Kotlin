@@ -6,10 +6,11 @@ import com.puzzlebench.cmk.domain.service.CharacterServices
 import io.reactivex.Single
 
 
-class CharacterServicesImpl(private val api: MarvelResquestGenerator = MarvelResquestGenerator(), private val mapper: CharacterMapperService = CharacterMapperService()) : CharacterServices {
+class CharacterServicesImpl(private val api: MarvelRequestGenerator = MarvelRequestGenerator(), private val mapper: CharacterMapperService = CharacterMapperService()) : CharacterServices {
     override fun getCharacters(): Single<List<Character>> {
         return api.makeMarvelService().getCharacter().map { response ->
-            response.data!!.result.map { characterResponse -> mapper.transform(characterResponse) }
+            response.data!!.result.map {
+                characterResponse -> mapper.transform(characterResponse) }
         }
     }
 }
