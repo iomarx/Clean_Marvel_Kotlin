@@ -36,6 +36,6 @@ class CharacterDetailDialog : DialogFragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val character = arguments.getInt(ARGUMENT_CHARACTER_ID)
+        val characterId = arguments.getInt(ARGUMENT_CHARACTER_ID)
     }
 }

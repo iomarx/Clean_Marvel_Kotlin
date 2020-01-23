@@ -8,33 +8,32 @@ import com.puzzlebench.cmk.domain.model.Thumbnail
 
 class CharacterMapperService : BaseMapperService<CharacterResponse, Character> {
 
-    override fun transform(characterResponse: CharacterResponse): Character
-            = Character(
+    override fun transform(characterResponse: CharacterResponse): Character = Character(
+            characterResponse.id,
             characterResponse.name,
             characterResponse.description,
             transformToThumbnail(characterResponse.thumbnail)
     )
 
-    override fun transformToResponse(type: Character): CharacterResponse
-            = CharacterResponse(
+    override fun transformToResponse(type: Character): CharacterResponse = CharacterResponse(
+            type.id,
             type.name,
             type.description,
             transformToThumbnailResponse(type.thumbnail)
     )
 
-    fun transformToThumbnail(thumbnailResponse: ThumbnailResponse): Thumbnail
-            = Thumbnail(
+    fun transformToThumbnail(thumbnailResponse: ThumbnailResponse): Thumbnail = Thumbnail(
             thumbnailResponse.path,
             thumbnailResponse.extension
     )
 
-    fun transformToThumbnailResponse(thumbnail: Thumbnail): ThumbnailResponse
-            = ThumbnailResponse(
+    fun transformToThumbnailResponse(thumbnail: Thumbnail): ThumbnailResponse = ThumbnailResponse(
             thumbnail.path,
             thumbnail.extension
     )
 
-    fun transform(charactersResponse: List<CharacterResponse>): List<Character>
-            = charactersResponse.map { transform(it) }
-
+    fun transform(charactersResponse: List<CharacterResponse>): List<Character> =
+            charactersResponse.map {
+                transform(it)
+            }
 }

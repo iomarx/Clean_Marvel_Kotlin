@@ -3,17 +3,31 @@ package com.puzzlebench.clean_marvel_kotlin.presentation.mvp
 import android.support.v7.widget.GridLayoutManager
 import android.view.View
 import com.puzzlebench.clean_marvel_kotlin.R
-import com.puzzlebench.cmk.domain.model.Character
 import com.puzzlebench.clean_marvel_kotlin.presentation.MainActivity
 import com.puzzlebench.clean_marvel_kotlin.presentation.adapter.CharacterAdapter
+import com.puzzlebench.clean_marvel_kotlin.presentation.dialog.CharacterDetailDialog
 import com.puzzlebench.clean_marvel_kotlin.presentation.extension.showToast
+import com.puzzlebench.cmk.domain.model.Character
 import kotlinx.android.synthetic.main.activity_main.*
 import java.lang.ref.WeakReference
 
 class CharacterView(activity: MainActivity) {
     private val activityRef = WeakReference(activity)
-    private val SPAN_COUNT = 1
-    var adapter = CharacterAdapter { character -> activity.applicationContext.showToast(character.name) }
+
+    companion object {
+        private const val SPAN_COUNT = 1
+    }
+
+    private var adapter = CharacterAdapter { character ->
+        displayCharacterDetail(character)
+    }
+
+    private fun displayCharacterDetail(character: Character) {
+        val detailDialog = CharacterDetailDialog.newInstance(character.id)
+        val fragmentManager = activityRef.get()?.supportFragmentManager
+
+        detailDialog.show(fragmentManager, CharacterDetailDialog.TAG)
+    }
 
     fun init() {
         val activity = activityRef.get()
@@ -22,7 +36,6 @@ class CharacterView(activity: MainActivity) {
             activity.recycleView.adapter = adapter
             showLoading()
         }
-
     }
 
     fun showToastNoItemToShow() {
@@ -30,7 +43,6 @@ class CharacterView(activity: MainActivity) {
         if (activity != null) {
             val message = activity.baseContext.resources.getString(R.string.message_no_items_to_show)
             activity.applicationContext.showToast(message)
-
         }
     }
 
