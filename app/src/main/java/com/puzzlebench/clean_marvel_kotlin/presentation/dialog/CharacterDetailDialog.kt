@@ -6,8 +6,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.puzzlebench.clean_marvel_kotlin.R
+import com.puzzlebench.clean_marvel_kotlin.presentation.mvp.CharacterDetailContract
+import com.puzzlebench.clean_marvel_kotlin.presentation.mvp.CharacterDetailPresenter
+import com.puzzlebench.clean_marvel_kotlin.presentation.mvp.CharacterDetailView
+import com.puzzlebench.cmk.data.service.CharacterServicesImpl
+import com.puzzlebench.cmk.domain.service.CharacterServices
+import com.puzzlebench.cmk.domain.usecase.GetSingleCharacterUseCase
+import io.reactivex.disposables.CompositeDisposable
 
 class CharacterDetailDialog : DialogFragment() {
+
+    private val characterService: CharacterServices by lazy {
+        CharacterServicesImpl()
+    }
+
+    private val presenter: CharacterDetailContract.Presenter by lazy {
+        CharacterDetailPresenter(
+                CharacterDetailView(this),
+                GetSingleCharacterUseCase(characterService),
+                CompositeDisposable()
+        )
+    }
 
     companion object {
         const val TAG = "CharacterDetailDialog"
@@ -36,6 +55,8 @@ class CharacterDetailDialog : DialogFragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         val characterId = arguments.getInt(ARGUMENT_CHARACTER_ID)
+        presenter.getCharacterDetail(characterId)
     }
 }

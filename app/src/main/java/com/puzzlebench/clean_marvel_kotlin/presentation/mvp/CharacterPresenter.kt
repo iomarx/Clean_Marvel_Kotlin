@@ -9,13 +9,16 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
-class CharacterPresenter constructor(view: CharacterView,
-                         private val getCharacterServiceUseCase: GetCharacterServiceUseCase,
-                         private val getCharacterRepositoryUseCase: GetCharacterRepositoryUseCase,
-                         private val saveCharacterRepositoryUseCase: SaveCharacterRepositoryUseCase,
-                         val subscriptions: CompositeDisposable) : Presenter<CharacterView>(view) {
+class CharacterPresenter constructor(
+        view: CharacterView,
+        private val getCharacterServiceUseCase: GetCharacterServiceUseCase,
+        private val getCharacterRepositoryUseCase: GetCharacterRepositoryUseCase,
+        private val saveCharacterRepositoryUseCase: SaveCharacterRepositoryUseCase,
+        private val subscriptions: CompositeDisposable
+) : Presenter<CharacterView>(view) {
 
     lateinit var characters: List<Character>
+
     fun init() {
         view.init()
         characters = getCharacterRepositoryUseCase.invoke()
@@ -28,19 +31,22 @@ class CharacterPresenter constructor(view: CharacterView,
     }
 
     private fun requestGetCharacters() {
-        val subscription = getCharacterServiceUseCase.invoke().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe({ characters ->
-            if (characters.isEmpty()) {
-                view.showToastNoItemToShow()
-            } else {
-                saveCharacterRepositoryUseCase.invoke(characters)
-                view.showCharacters(characters)
-            }
-            view.hideLoading()
+        val subscription = getCharacterServiceUseCase.invoke()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ characters ->
+                    if (characters.isEmpty()) {
+                        view.showToastNoItemToShow()
+                    } else {
+                        saveCharacterRepositoryUseCase.invoke(characters)
+                        view.showCharacters(characters)
+                    }
+                    view.hideLoading()
 
-        }, { e ->
-            view.hideLoading()
-            view.showToastNetworkError(e.message.toString())
-        })
+                }, { e ->
+                    view.hideLoading()
+                    view.showToastNetworkError(e.message.toString())
+                })
         subscriptions.add(subscription)
     }
 }

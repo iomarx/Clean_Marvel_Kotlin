@@ -13,16 +13,16 @@ class CharacterServicesImpl(
 
     override fun getCharacters(): Single<List<Character>> {
         return api.makeMarvelService().getCharacter().map { response ->
-            response.data!!.result.map { characterResponse ->
+            response.data?.result?.map { characterResponse ->
                 mapper.transform(characterResponse)
             }
         }
     }
 
-    override fun getCharacterDetail(characterId: Int): Single<Character?> {
+    override fun getCharacterDetail(characterId: Int): Single<List<Character>> {
         return api.makeMarvelService().getCharacterDetail(characterId).map { response ->
             response.data?.result?.let {
-                mapper.transform(it[0])
+                mapper.transform(it)
             }
         }
     }
