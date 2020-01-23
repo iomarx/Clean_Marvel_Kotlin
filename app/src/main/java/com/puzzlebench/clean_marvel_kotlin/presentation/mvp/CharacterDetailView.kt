@@ -25,7 +25,13 @@ class CharacterDetailView(dialog: CharacterDetailDialog) : CharacterDetailContra
     }
 
     override fun displayCharacterDetail(character: Character) {
-        dialogRef.get()?.image_character_picture?.getImageByUrl(character.thumbnail.url)
+        dialogRef.get()?.let { dialog ->
+            with(character) {
+                dialog.image_character_picture.getImageByUrl(thumbnail.url)
+                dialog.text_name.text = name
+                dialog.text_description.text = description
+            }
+        }
     }
 
     override fun displayError(error: Throwable) {

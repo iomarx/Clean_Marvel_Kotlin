@@ -14,4 +14,27 @@
         <item name="android:windowIsFloating">false</item>
     </style>
 
+    <style name="TextStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="TextStyle.Headline">
+        <item name="android:textSize">@dimen/size_headline_text_28</item>
+        <item name="android:fontFamily">sans-serif-black</item>
+    </style>
+
+    <style name="TextStyle.Normal">
+        <item name="android:textSize">@dimen/size_all_text_normal_18</item>
+        <item name="android:fontFamily">sans-serif-condensed</item>
+    </style>
+
+    <style name="TextStyle.Headline.PrimaryColor">
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="TextStyle.Normal.ColorAccent">
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
 </resources>
