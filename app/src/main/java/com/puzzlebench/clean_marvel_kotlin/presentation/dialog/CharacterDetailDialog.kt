@@ -1,20 +1,19 @@
 package com.puzzlebench.clean_marvel_kotlin.presentation.dialog
 
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.puzzlebench.clean_marvel_kotlin.R
+import com.puzzlebench.clean_marvel_kotlin.presentation.base.BaseRxDialog
 import com.puzzlebench.clean_marvel_kotlin.presentation.mvp.CharacterDetailContract
 import com.puzzlebench.clean_marvel_kotlin.presentation.mvp.CharacterDetailPresenter
 import com.puzzlebench.clean_marvel_kotlin.presentation.mvp.CharacterDetailView
 import com.puzzlebench.cmk.data.service.CharacterServicesImpl
 import com.puzzlebench.cmk.domain.service.CharacterServices
 import com.puzzlebench.cmk.domain.usecase.GetSingleCharacterUseCase
-import io.reactivex.disposables.CompositeDisposable
 
-class CharacterDetailDialog : DialogFragment() {
+class CharacterDetailDialog : BaseRxDialog() {
 
     private val characterService: CharacterServices by lazy {
         CharacterServicesImpl()
@@ -24,7 +23,7 @@ class CharacterDetailDialog : DialogFragment() {
         CharacterDetailPresenter(
                 CharacterDetailView(this),
                 GetSingleCharacterUseCase(characterService),
-                CompositeDisposable()
+                subscriptions
         )
     }
 
