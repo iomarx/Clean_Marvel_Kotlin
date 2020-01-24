@@ -27,21 +27,6 @@ class CharacterDetailDialog : BaseRxDialog() {
         )
     }
 
-    companion object {
-        const val TAG = "CharacterDetailDialog"
-        private const val ARGUMENT_CHARACTER_ID = "ARGUMENT_CHARACTER_ID"
-
-        fun newInstance(characterId: Int): CharacterDetailDialog {
-            val bundle = Bundle().apply {
-                putInt(ARGUMENT_CHARACTER_ID, characterId)
-            }
-
-            return CharacterDetailDialog().apply {
-                arguments = bundle
-            }
-        }
-    }
-
     override fun onCreateView(
             inflater: LayoutInflater?,
             container: ViewGroup?,
@@ -57,5 +42,20 @@ class CharacterDetailDialog : BaseRxDialog() {
 
         val characterId = arguments.getInt(ARGUMENT_CHARACTER_ID)
         presenter.getCharacterDetail(characterId)
+    }
+
+    companion object {
+        const val TAG = "CharacterDetailDialog"
+        private const val ARGUMENT_CHARACTER_ID = "ARGUMENT_CHARACTER_ID"
+
+        fun newInstance(characterId: Int): CharacterDetailDialog {
+            val bundle = Bundle().apply {
+                putInt(ARGUMENT_CHARACTER_ID, characterId)
+            }
+
+            return CharacterDetailDialog().apply {
+                arguments = bundle
+            }
+        }
     }
 }

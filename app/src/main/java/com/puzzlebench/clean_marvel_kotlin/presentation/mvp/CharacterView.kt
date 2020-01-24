@@ -14,10 +14,6 @@ import java.lang.ref.WeakReference
 class CharacterView(activity: MainActivity) {
     private val activityRef = WeakReference(activity)
 
-    companion object {
-        private const val SPAN_COUNT = 1
-    }
-
     private var adapter = CharacterAdapter { character ->
         displayCharacterDetail(character)
     }
@@ -60,6 +56,9 @@ class CharacterView(activity: MainActivity) {
 
     fun showLoading() {
         activityRef.get()!!.progressBar.visibility = View.VISIBLE
+    }
 
+    companion object {
+        private const val SPAN_COUNT = 1
     }
 }
