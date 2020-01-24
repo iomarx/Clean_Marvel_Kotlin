@@ -48,6 +48,8 @@ dependencies {
             generalDependencies.kotlin
 
     testImplementation generalTestDependencies.junit,
+            generalTestDependencies.mockito,
+            generalTestDependencies.mockitoInline,
             generalTestDependencies.kotlinTest
 
     implementation dataDependencies.retrofit,

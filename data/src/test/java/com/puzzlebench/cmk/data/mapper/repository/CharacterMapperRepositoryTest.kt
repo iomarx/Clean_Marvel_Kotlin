@@ -24,7 +24,7 @@ class CharacterMapperRepositoryTest {
 
 
         val mockThumbnailRealm = ThumbnailRealm(CharactersFactory.BASE_PATH, CharactersFactory.BASE_EXTENSION)
-        val mockCharacterRealm = CharacterRealm(CharactersFactory.BASE_NAME, CharactersFactory.BASE_DESCRIPTION, mockThumbnailRealm)
+        val mockCharacterRealm = CharacterRealm(CharactersFactory.BASE_ID, CharactersFactory.BASE_NAME, CharactersFactory.BASE_DESCRIPTION, mockThumbnailRealm)
         val result = mapper.transform(mockCharacterRealm)
         assertBufferooDataEquality(mockCharacterRealm, result)
 
