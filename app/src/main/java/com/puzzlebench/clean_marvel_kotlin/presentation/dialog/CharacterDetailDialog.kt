@@ -28,19 +28,19 @@ class CharacterDetailDialog : BaseRxDialog() {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater?,
+            inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        return inflater?.inflate(R.layout.dialog_character_detail, container, false)
+        return inflater.inflate(R.layout.dialog_character_detail, container, false)
     }
 
     override fun getTheme() = R.style.FullscreenDialogTheme
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val characterId = arguments.getInt(ARGUMENT_CHARACTER_ID)
+        val characterId = arguments?.getInt(ARGUMENT_CHARACTER_ID) ?: 0
         presenter.getCharacterDetail(characterId)
     }
 

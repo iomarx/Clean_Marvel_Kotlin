@@ -1,6 +1,6 @@
 package com.puzzlebench.clean_marvel_kotlin.presentation.mvp
 
-import android.support.v7.widget.GridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import android.view.View
 import com.puzzlebench.clean_marvel_kotlin.R
 import com.puzzlebench.clean_marvel_kotlin.presentation.MainActivity

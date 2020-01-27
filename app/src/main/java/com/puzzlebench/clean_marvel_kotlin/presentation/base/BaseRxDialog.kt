@@ -1,6 +1,6 @@
 package com.puzzlebench.clean_marvel_kotlin.presentation.base
 
-import android.support.v4.app.DialogFragment
+import androidx.fragment.app.DialogFragment
 import io.reactivex.disposables.CompositeDisposable
 
 open class BaseRxDialog : DialogFragment() {
