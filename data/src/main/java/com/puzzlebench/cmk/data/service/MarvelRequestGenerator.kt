@@ -15,12 +15,6 @@ import java.security.MessageDigest
 
 
 class MarvelRequestGenerator {
-    companion object {
-        const val MD5_ALGORITHM = "MD5"
-        const val RADIX_VALUE = 16
-        const val STRING_LENGTH = 16
-        const val PAD_CHAR = '0'
-    }
 
     private val HASH_ARG = "hash"
     private val PUBLIC_API_KEY_ARG = "apikey"
@@ -61,6 +55,13 @@ class MarvelRequestGenerator {
     fun makeMarvelService(): MarvelApi {
         val okHttpClient = httpClient.build()
         return makeMarvelService(okHttpClient)
+    }
+
+    companion object {
+        const val MD5_ALGORITHM = "MD5"
+        const val RADIX_VALUE = 16
+        const val STRING_LENGTH = 16
+        const val PAD_CHAR = '0'
     }
 }
 

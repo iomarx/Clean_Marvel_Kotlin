@@ -20,9 +20,9 @@ ext {
     retrofitAdapterRXVersion = '2.4.0'
 
     //test dependencies
-    mockitoVersion = '2.10.0'
+    mockitoVersion = '3.2.4'
     jUnitVersion = '4.12'
-    mockitoInlineVersion = '2.18.3'
+    mockitoInlineVersion = '3.2.4'
 
 
     generalDependencies = [

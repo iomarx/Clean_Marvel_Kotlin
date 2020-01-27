@@ -23,7 +23,7 @@ class CharacterMapperServiceTest {
     fun transform() {
 
         val mockThumbnailResponse = ThumbnailResponse(CharactersFactory.BASE_PATH, CharactersFactory.BASE_EXTENSION)
-        val mockCharacterResponse = CharacterResponse(CharactersFactory.BASE_NAME, CharactersFactory.BASE_DESCRIPTION, mockThumbnailResponse)
+        val mockCharacterResponse = CharacterResponse(CharactersFactory.BASE_ID, CharactersFactory.BASE_NAME, CharactersFactory.BASE_DESCRIPTION, mockThumbnailResponse)
         val result = mapper.transform(mockCharacterResponse)
         assertBufferooDataEquality(mockCharacterResponse, result)
     }
