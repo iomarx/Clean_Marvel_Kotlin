@@ -40,10 +40,10 @@ dependencies {
             generalDependencies.appSupport,
             generalDependencies.kotlin
 
-
     implementation appDependencies.picasso,
             appDependencies.recyclerView,
-            appDependencies.constraintLayout
+            appDependencies.constraintLayout,
+            appDependencies.cardView
 
     testImplementation generalTestDependencies.mockito,
             generalTestDependencies.junit,

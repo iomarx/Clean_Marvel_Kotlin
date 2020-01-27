@@ -42,7 +42,8 @@ ext {
     appDependencies = [
             picasso         : "com.squareup.picasso:picasso:${picassoVersion}",
             recyclerView    : "com.android.support:recyclerview-v7:${recyclerViewVersion}",
-            constraintLayout: "com.android.support.constraint:constraint-layout:${constraintLayoutVersion}"
+            constraintLayout: "com.android.support.constraint:constraint-layout:${constraintLayoutVersion}",
+            cardView        : "com.android.support:cardview-v7:${appSupportVersion}"
     ]
 
     dataDependencies = [

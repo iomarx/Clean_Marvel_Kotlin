@@ -10,4 +10,5 @@
     <dimen name="body_text_size">16dp</dimen>
     <dimen name="size_headline_text_28">28sp</dimen>
     <dimen name="size_all_text_normal_18">18sp</dimen>
+    <dimen name="margin_all_xsmall_8">8dp</dimen>
 </resources>
