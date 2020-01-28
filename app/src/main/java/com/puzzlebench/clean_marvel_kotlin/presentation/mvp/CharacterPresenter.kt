@@ -23,17 +23,22 @@ class CharacterPresenter constructor(
         view.init()
         characters = getCharacterRepositoryUseCase.invoke()
         if (characters.isEmpty()) {
-            requestGetCharacters()
+            requestCharacters()
         } else {
-            view.hideLoading()
             view.showCharacters(characters)
         }
     }
 
-    private fun requestGetCharacters() {
+    fun requestCharacters() {
         val subscription = getCharacterServiceUseCase.invoke()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe {
+                    view.showLoading()
+                }
+                .doAfterTerminate {
+                    view.hideLoading()
+                }
                 .subscribe({ characters ->
                     if (characters.isEmpty()) {
                         view.showToastNoItemToShow()
@@ -41,10 +46,7 @@ class CharacterPresenter constructor(
                         saveCharacterRepositoryUseCase.invoke(characters)
                         view.showCharacters(characters)
                     }
-                    view.hideLoading()
-
                 }, { e ->
-                    view.hideLoading()
                     view.showToastNetworkError(e.message.toString())
                 })
         subscriptions.add(subscription)

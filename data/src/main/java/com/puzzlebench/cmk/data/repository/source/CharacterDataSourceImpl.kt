@@ -19,7 +19,5 @@ class CharacterDataSourceImpl : DataSource<CharacterRealm>(CharacterRealm::class
             }
         }
         return allCharacters
-
     }
-
 }

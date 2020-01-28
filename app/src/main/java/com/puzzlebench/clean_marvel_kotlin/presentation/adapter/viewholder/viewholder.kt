@@ -1,6 +1,6 @@
 package com.puzzlebench.clean_marvel_kotlin.presentation.adapter.viewholder
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import com.puzzlebench.clean_marvel_kotlin.presentation.extension.getImageByUrl
 import com.puzzlebench.clean_marvel_kotlin.presentation.listener.CharacterListener

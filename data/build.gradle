@@ -13,20 +13,20 @@ android {
         targetSdkVersion globalConfiguration.getAt("androidTargetSdkVersion")
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         debug {
             buildConfigField "String", "PRIVATE_API_KEY_VALUE", '"959f6baf1e983ec74a783e80459d76d2a5e1927a"'
             buildConfigField "String", "PUBLIC_API_KEY_VALUE", '"a94bd8ce803de285065be274f46a4942"'
-            buildConfigField "String", "MARVEL_BASE_URL", '"http://gateway.marvel.com/public/"'
+            buildConfigField "String", "MARVEL_BASE_URL", '"https://gateway.marvel.com/public/"'
         }
 
         release {
             minifyEnabled false
             buildConfigField "String", "PRIVATE_API_KEY_VALUE", '"959f6baf1e983ec74a783e80459d76d2a5e1927a"'
             buildConfigField "String", "PUBLIC_API_KEY_VALUE", '"a94bd8ce803de285065be274f46a4942"'
-            buildConfigField "String", "MARVEL_BASE_URL", '"http://gateway.marvel.com/public/"'
+            buildConfigField "String", "MARVEL_BASE_URL", '"https://gateway.marvel.com/public/"'
 
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

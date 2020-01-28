@@ -23,7 +23,7 @@ class CharacterMapperService : BaseMapperService<CharacterResponse, Character> {
     )
 
     fun transformToThumbnail(thumbnailResponse: ThumbnailResponse): Thumbnail = Thumbnail(
-            thumbnailResponse.path,
+            thumbnailResponse.securePath,
             thumbnailResponse.extension
     )
 
