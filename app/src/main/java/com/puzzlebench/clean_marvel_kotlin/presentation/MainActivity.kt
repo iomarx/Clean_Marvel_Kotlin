@@ -12,7 +12,7 @@ import com.puzzlebench.cmk.data.service.CharacterServicesImpl
 import com.puzzlebench.cmk.domain.usecase.GetCharacterRepositoryUseCase
 import com.puzzlebench.cmk.domain.usecase.GetCharacterServiceUseCase
 import com.puzzlebench.cmk.domain.usecase.SaveCharacterRepositoryUseCase
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.fab_refresh
 
 class MainActivity : BaseRxActivity() {
 

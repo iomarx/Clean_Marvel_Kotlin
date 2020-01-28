@@ -8,7 +8,8 @@ import com.puzzlebench.clean_marvel_kotlin.presentation.adapter.CharacterAdapter
 import com.puzzlebench.clean_marvel_kotlin.presentation.dialog.CharacterDetailDialog
 import com.puzzlebench.clean_marvel_kotlin.presentation.extension.showToast
 import com.puzzlebench.cmk.domain.model.Character
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.recycleView
+import kotlinx.android.synthetic.main.activity_main.progressBar
 import java.lang.ref.WeakReference
 
 class CharacterView(activity: MainActivity) {
