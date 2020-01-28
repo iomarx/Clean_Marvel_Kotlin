@@ -43,7 +43,8 @@ dependencies {
     implementation appDependencies.recyclerView,
             appDependencies.constraintLayout,
             appDependencies.cardView,
-            appDependencies.glide
+            appDependencies.glide,
+            appDependencies.material
 
     kapt appDependencies.glideCompiler
 

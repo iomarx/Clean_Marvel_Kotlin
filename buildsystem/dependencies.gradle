@@ -45,7 +45,8 @@ ext {
             constraintLayout: "androidx.constraintlayout:constraintlayout:${constraintLayoutVersion}",
             cardView        : "androidx.cardview:cardview:${androidXVersion}",
             glide           : "com.github.bumptech.glide:glide:${glideVersion}",
-            glideCompiler   : "com.github.bumptech.glide:compiler:${glideVersion}"
+            glideCompiler   : "com.github.bumptech.glide:compiler:${glideVersion}",
+            material        : "com.google.android.material:material:${androidXVersion}"
     ]
 
     dataDependencies = [
