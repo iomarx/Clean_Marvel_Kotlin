@@ -8,7 +8,7 @@ import com.puzzlebench.cmk.domain.model.Thumbnail
 class CharacterMapperRepository : BaseMapperRepository<Character, CharacterRealm> {
 
     override fun transform(input: CharacterRealm): Character =
-            Character(input.id, input.name!!, input.description!!, transformToThumbnail(input.thumbnail!!))
+            Character(input._id, input.name!!, input.description!!, transformToThumbnail(input.thumbnail!!))
 
     override fun transform(input: Character): CharacterRealm =
             CharacterRealm(input.id, input.name, input.description, transformToThumbnailRealm(input.thumbnail))
