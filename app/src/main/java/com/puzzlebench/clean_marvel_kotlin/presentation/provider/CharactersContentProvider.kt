@@ -12,8 +12,8 @@ import io.realm.Realm
 class CharactersContentProvider : ContentProvider() {
 
     private val uriMatcher = UriMatcher(UriMatcher.NO_MATCH).apply {
-        addURI(AUTHORITY, "Characters", ALL_CHARACTERS)
-        addURI(AUTHORITY, "Characters/#", SINGLE_CHARACTER)
+        addURI(AUTHORITY, TABLE, ALL_CHARACTERS)
+        addURI(AUTHORITY, "$TABLE/#", SINGLE_CHARACTER)
     }
 
     override fun insert(uri: Uri, values: ContentValues?): Uri? {
@@ -111,16 +111,17 @@ class CharactersContentProvider : ContentProvider() {
 
     override fun getType(uri: Uri): String? {
         return when (uriMatcher.match(uri)) {
-            ALL_CHARACTERS -> "vnd.android.cursor.dir/com.puzzlebench.clean_marvel_kotlin"
-            SINGLE_CHARACTER -> "vnd.android.cursor.item(com.puzzlebench.clean_marvel_kotlin"
+            ALL_CHARACTERS -> "vnd.android.cursor.dir/$AUTHORITY"
+            SINGLE_CHARACTER -> "vnd.android.cursor.item/$AUTHORITY"
             else -> null
         }
     }
 
     companion object {
-        private const val URI = "content://com.puzzlebench.clean_marvel_kotlin/Characters"
-        val CONTENT_URI = Uri.parse(URI)
         private const val AUTHORITY = "com.puzzlebench.clean_marvel_kotlin"
+        private const val TABLE = "Characters"
+        private const val URI = "content://$AUTHORITY/$TABLE"
+        val CONTENT_URI = Uri.parse(URI)
         private const val ALL_CHARACTERS = 1
         private const val SINGLE_CHARACTER = 2
 
