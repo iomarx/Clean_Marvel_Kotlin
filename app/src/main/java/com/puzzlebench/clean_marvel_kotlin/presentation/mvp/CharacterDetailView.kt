@@ -27,6 +27,7 @@ class CharacterDetailView(dialog: CharacterDetailDialog) : CharacterDetailContra
     override fun displayCharacterDetail(character: Character) {
         dialogRef.get()?.let { dialog ->
             with(character) {
+                dialog.button_delete.visibility = View.VISIBLE
                 dialog.image_character_picture.getImageByUrl(thumbnail.url)
                 dialog.text_name.text = name
                 dialog.text_description.text = description

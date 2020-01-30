@@ -39,7 +39,7 @@ class CharactersContentProvider : ContentProvider() {
     ): Cursor? {
         val matrixCursor = MatrixCursor(columns)
 
-        Realm.getDefaultInstance().use { realm ->
+        runOnRealm { realm ->
             val baseQuery = realm.where(CharacterRealm::class.java)
 
             if (uriMatcher.match(uri) == SINGLE_CHARACTER) {
@@ -49,7 +49,7 @@ class CharactersContentProvider : ContentProvider() {
                     matrixCursor.addRow(characterToArray(it))
                 }
             } else {
-                val realmResults = baseQuery.findAll()
+                val realmResults = baseQuery.findAll().sort(sortOrder)
 
                 realmResults.forEach {
                     matrixCursor.addRow(characterToArray(it))
@@ -59,6 +59,12 @@ class CharactersContentProvider : ContentProvider() {
         }
 
         return matrixCursor
+    }
+
+    private fun runOnRealm(action: (Realm) -> Unit) {
+        Realm.getDefaultInstance().use {
+            action.invoke(it)
+        }
     }
 
     private fun characterToArray(it: CharacterRealm) = arrayOf(
@@ -83,7 +89,24 @@ class CharactersContentProvider : ContentProvider() {
     }
 
     override fun delete(uri: Uri, selection: String?, selectionArgs: Array<String>?): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (uriMatcher.match(uri) != SINGLE_CHARACTER) return 0
+
+        var deleteCount = 0
+
+        runOnRealm { realm ->
+            val id = uri.lastPathSegment?.toInt() ?: 0
+            val result = realm.where(CharacterRealm::class.java).equalTo(COLUMN_ID, id).findFirst()
+            realm.executeTransaction {
+                result?.deleteFromRealm()
+                deleteCount++
+            }
+        }
+
+        if (deleteCount > 0) {
+            context?.contentResolver?.notifyChange(uri, null)
+        }
+
+        return deleteCount
     }
 
     override fun getType(uri: Uri): String? {

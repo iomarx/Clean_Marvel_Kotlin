@@ -92,6 +92,12 @@ class CharacterView(activity: MainActivity) : LoaderManager.LoaderCallbacks<Curs
         }
     }
 
+    fun restartLoader() {
+        runSafely {
+            LoaderManager.getInstance(it).restartLoader(LOADER_ALL_ID, null, this)
+        }
+    }
+
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
         val characterId = args?.getInt(SELECTED_CHARACTER_ARG) ?: 0
         val uri = if (characterId == 0) {
@@ -101,14 +107,20 @@ class CharacterView(activity: MainActivity) : LoaderManager.LoaderCallbacks<Curs
         }
 
         return activityRef.get()?.let {
-            CursorLoader(it, uri, null, null, null, null)
+            CursorLoader(it, uri, null, null, null, COLUMN_NAME)
         } ?: run {
             throw Exception("Invalid activity")
         }
     }
 
     override fun onLoadFinished(loader: Loader<Cursor>, data: Cursor?) {
-        if (data == null || data.count == 0) return
+        if (data == null || data.count == 0) {
+            if (loader.id == LOADER_ALL_ID) {
+                showCharacters(emptyList())
+                showToastNoItemToShow()
+            }
+            return
+        }
 
         val characters = extractData(data)
 

@@ -21,12 +21,13 @@ class CharacterPresenter constructor(
 
     fun init() {
         view.init()
-        characters = getCharacterRepositoryUseCase.invoke()
-        if (characters.isEmpty()) {
+        // characters = getCharacterRepositoryUseCase.invoke()
+        /*if (characters.isEmpty()) {
             requestCharacters()
-        } else {
-            view.showCharacters(characters)
-        }
+        } else {*/
+        // view.showCharacters(characters)
+        view.initializeLoader()
+        //}
     }
 
     fun requestCharacters() {
@@ -44,8 +45,9 @@ class CharacterPresenter constructor(
                         view.showToastNoItemToShow()
                     } else {
                         saveCharacterRepositoryUseCase.invoke(characters)
-                        view.showCharacters(characters)
+                        //view.showCharacters(characters)
                     }
+                    view.restartLoader()
                 }, { e ->
                     view.showToastNetworkError(e.message.toString())
                 })

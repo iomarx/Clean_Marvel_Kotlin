@@ -1,5 +1,6 @@
 package com.puzzlebench.clean_marvel_kotlin.presentation.dialog
 
+import android.content.ContentUris
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,9 +10,11 @@ import com.puzzlebench.clean_marvel_kotlin.presentation.base.BaseRxDialog
 import com.puzzlebench.clean_marvel_kotlin.presentation.mvp.CharacterDetailContract
 import com.puzzlebench.clean_marvel_kotlin.presentation.mvp.CharacterDetailPresenter
 import com.puzzlebench.clean_marvel_kotlin.presentation.mvp.CharacterDetailView
+import com.puzzlebench.clean_marvel_kotlin.presentation.provider.CharactersContentProvider
 import com.puzzlebench.cmk.data.service.CharacterServicesImpl
 import com.puzzlebench.cmk.domain.service.CharacterServices
 import com.puzzlebench.cmk.domain.usecase.GetSingleCharacterUseCase
+import kotlinx.android.synthetic.main.dialog_character_detail.*
 
 class CharacterDetailDialog : BaseRxDialog() {
 
@@ -42,6 +45,20 @@ class CharacterDetailDialog : BaseRxDialog() {
 
         val characterId = arguments?.getInt(ARGUMENT_CHARACTER_ID) ?: 0
         presenter.getCharacterDetail(characterId)
+
+        button_delete.setOnClickListener {
+            tryToDeleteCharacter(characterId)
+        }
+    }
+
+    private fun tryToDeleteCharacter(characterId: Int) {
+        activity?.let {
+            val uri = ContentUris.withAppendedId(CharactersContentProvider.CONTENT_URI, characterId.toLong())
+            val rowsDeleted = it.contentResolver.delete(uri, null, null)
+            if (rowsDeleted > 0) {
+                dismiss()
+            }
+        }
     }
 
     companion object {
