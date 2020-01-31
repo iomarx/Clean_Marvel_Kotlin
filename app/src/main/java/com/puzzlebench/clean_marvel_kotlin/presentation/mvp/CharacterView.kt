@@ -2,7 +2,6 @@ package com.puzzlebench.clean_marvel_kotlin.presentation.mvp
 
 import android.database.Cursor
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.CursorLoader
@@ -118,8 +117,7 @@ class CharacterView(activity: MainActivity) : LoaderManager.LoaderCallbacks<Curs
                     val description = getString(getColumnIndex(COLUMN_DESCRIPTION))
                     val thumbnailPath = getString(getColumnIndex(COLUMN_THUMBNAIL_PATH))
                     val thumbnailExtension = getString(getColumnIndex(COLUMN_THUMBNAIL_EXTENSION))
-
-                    Log.i("Cursro", "Character = $id, $name, $description, $thumbnailPath, $thumbnailExtension")
+                    
                     characters.add(Character(
                             id,
                             name,

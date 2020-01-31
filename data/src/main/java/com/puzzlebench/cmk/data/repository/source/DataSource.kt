@@ -42,11 +42,13 @@ abstract class DataSource<T : RealmObject>(private val clazz: Class<T>) {
 
     fun delete(id: Int): Int {
         var deleteResult = 0
-        Realm.getDefaultInstance().use {
-            val result = it.where(clazz).equalTo("_id", id).findFirst()
-            it.executeTransaction {
-                result?.deleteFromRealm()
-                deleteResult = id
+        Realm.getDefaultInstance().use { realm ->
+            val result = realm.where(clazz).equalTo("_id", id).findFirst()
+            realm.executeTransaction {
+                result?.let {
+                    it.deleteFromRealm()
+                    deleteResult = id
+                }
             }
         }
 

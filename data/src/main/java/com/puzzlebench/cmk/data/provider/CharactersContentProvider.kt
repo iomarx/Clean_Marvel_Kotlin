@@ -7,15 +7,11 @@ import android.content.UriMatcher
 import android.database.Cursor
 import android.database.MatrixCursor
 import android.net.Uri
-import android.util.Log
 import com.puzzlebench.cmk.data.mapper.repository.CharacterMapperRepository
-import com.puzzlebench.cmk.data.mapper.repository.NullableCharacterMapper
-import com.puzzlebench.cmk.data.mapper.repository.ThumbnailTransform
-import com.puzzlebench.cmk.data.repository.CharacterContentProviderRepository
+import com.puzzlebench.cmk.data.repository.source.CharacterDataSource
 import com.puzzlebench.cmk.data.repository.source.CharacterDataSourceImpl
 import com.puzzlebench.cmk.domain.model.Character
 import com.puzzlebench.cmk.domain.model.Thumbnail
-import com.puzzlebench.cmk.domain.repository.CharacterRepository
 
 class CharactersContentProvider : ContentProvider() {
 
@@ -34,12 +30,12 @@ class CharactersContentProvider : ContentProvider() {
         )
     }
 
-    private val repository: CharacterRepository by lazy {
-        CharacterContentProviderRepository(
-                CharacterMapperRepository(),
-                CharacterDataSourceImpl(),
-                NullableCharacterMapper(ThumbnailTransform())
-        )
+    private val mapper by lazy {
+        CharacterMapperRepository()
+    }
+
+    private val dataSource: CharacterDataSource by lazy {
+        CharacterDataSourceImpl()
     }
 
     override fun insert(uri: Uri, values: ContentValues?): Uri? {
@@ -57,14 +53,16 @@ class CharactersContentProvider : ContentProvider() {
                             it.getAsString(COLUMN_THUMBNAIL_EXTENSION)
                     )
             )
-
-            repository.save(listOf(character))
+            dataSource.saveCharacters(listOf(mapper.transform(character)))
             resultUri = ContentUris.withAppendedId(CONTENT_URI, character.id.toLong())
-            context?.contentResolver?.notifyChange(uri, null)
+            notifyChange(uri)
         }
-        Log.i("ContentProvider", "Saved value with uri = $resultUri")
 
         return resultUri
+    }
+
+    private fun notifyChange(uri: Uri) {
+        context?.contentResolver?.notifyChange(uri, null)
     }
 
     override fun query(
@@ -78,14 +76,14 @@ class CharactersContentProvider : ContentProvider() {
 
         if (uriMatcher.match(uri) == SINGLE_CHARACTER) {
             val id = uri.lastPathSegment?.toInt() ?: 0
-            val result = repository.findById(id)
+            val result = dataSource.findCharacterById(id)
             result?.let {
-                matrixCursor.addRow(characterToArray(it))
+                matrixCursor.addRow(characterToArray(mapper.transform(it)))
             }
         } else {
-            val characters = repository.getAll(sortOrder ?: "")
+            val characters = dataSource.getAllCharacters(sortOrder ?: "")
             characters.forEach {
-                matrixCursor.addRow(characterToArray(it))
+                matrixCursor.addRow(characterToArray(mapper.transform(it)))
             }
         }
 
@@ -108,16 +106,36 @@ class CharactersContentProvider : ContentProvider() {
             selection: String?,
             selectionArgs: Array<String>?
     ): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (uriMatcher.match(uri) != SINGLE_CHARACTER) return 0
+
+        var updated = 0
+        values?.let {
+            val id = uri.lastPathSegment?.toInt() ?: 0
+
+            val character = Character(
+                    id,
+                    it.getAsString(COLUMN_NAME),
+                    it.getAsString(COLUMN_DESCRIPTION),
+                    Thumbnail(
+                            it.getAsString(COLUMN_THUMBNAIL_PATH),
+                            it.getAsString(COLUMN_THUMBNAIL_EXTENSION)
+                    )
+            )
+            dataSource.saveCharacters(listOf(mapper.transform(character)))
+            updated++
+            notifyChange(uri)
+        }
+
+        return updated
     }
 
     override fun delete(uri: Uri, selection: String?, selectionArgs: Array<String>?): Int {
         if (uriMatcher.match(uri) != SINGLE_CHARACTER) return 0
 
         val id = uri.lastPathSegment?.toInt() ?: 0
-        val deleteResult = repository.delete(id)
+        val deleteResult = dataSource.deleteCharacter(id)
         if (deleteResult > 0) {
-            context?.contentResolver?.notifyChange(uri, null)
+            notifyChange(uri)
         }
 
         return deleteResult

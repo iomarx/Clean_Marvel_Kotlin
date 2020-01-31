@@ -8,9 +8,12 @@ interface CharacterDetailContract {
         fun hideLoader()
         fun displayCharacterDetail(character: Character)
         fun displayError(error: Throwable)
+        fun deleteSuccess()
+        fun deleteFailed()
     }
 
     interface Presenter {
         fun getCharacterDetail(characterId: Int)
+        fun deleteCharacter(characterId: Int)
     }
 }
