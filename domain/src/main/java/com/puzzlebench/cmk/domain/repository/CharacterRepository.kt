@@ -5,7 +5,7 @@ import com.puzzlebench.cmk.domain.model.Character
 interface CharacterRepository {
     fun getAll(sortOrder: String = ""): List<Character>
 
-    fun save(c: List<Character>)
+    fun save(characters: List<Character>)
 
     fun findById(id: Int): Character?
 

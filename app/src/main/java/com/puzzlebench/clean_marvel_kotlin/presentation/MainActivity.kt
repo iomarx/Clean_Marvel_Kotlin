@@ -11,7 +11,6 @@ import com.puzzlebench.cmk.data.mapper.repository.ThumbnailTransform
 import com.puzzlebench.cmk.data.repository.CharacterDataRepository
 import com.puzzlebench.cmk.data.repository.source.CharacterDataSourceImpl
 import com.puzzlebench.cmk.data.service.CharacterServicesImpl
-import com.puzzlebench.cmk.domain.usecase.GetCharacterRepositoryUseCase
 import com.puzzlebench.cmk.domain.usecase.GetCharacterServiceUseCase
 import com.puzzlebench.cmk.domain.usecase.SaveCharacterRepositoryUseCase
 import kotlinx.android.synthetic.main.activity_main.*
@@ -20,18 +19,17 @@ class MainActivity : BaseRxActivity() {
 
     private val characterService = CharacterServicesImpl()
     private val characterRepository = CharacterDataRepository(
+            this,
             CharacterDataSourceImpl(),
             CharacterMapperRepository(),
             NullableCharacterMapper(ThumbnailTransform())
     )
 
     private val getCharacterServiceUseCase = GetCharacterServiceUseCase(characterService)
-    private val getCharacterRepositoryUseCase = GetCharacterRepositoryUseCase(characterRepository)
     private val saveCharacterRepositoryUseCase = SaveCharacterRepositoryUseCase(characterRepository)
 
     private val presenter = CharacterPresenter(CharacterView(this),
             getCharacterServiceUseCase,
-            getCharacterRepositoryUseCase,
             saveCharacterRepositoryUseCase,
             subscriptions
     )

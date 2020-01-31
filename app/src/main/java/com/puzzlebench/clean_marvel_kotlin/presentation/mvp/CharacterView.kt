@@ -86,12 +86,6 @@ class CharacterView(activity: MainActivity) : LoaderManager.LoaderCallbacks<Curs
         }
     }
 
-    fun restartLoader() {
-        runSafely {
-            LoaderManager.getInstance(it).restartLoader(LOADER_ALL_ID, null, this)
-        }
-    }
-
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
         val uri = CharactersContentProvider.CONTENT_URI
 
