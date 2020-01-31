@@ -10,14 +10,18 @@ class CharacterDataSourceImpl : DataSource<CharacterRealm>(CharacterRealm::class
         this.save(c)
     }
 
-    override fun getAllCharacters(): List<CharacterRealm> {
+    override fun getAllCharacters(sortOrder: String): List<CharacterRealm> {
         var allCharacters: List<CharacterRealm> = arrayListOf()
         Realm.getDefaultInstance().use { realm ->
-            val result = realm.where(CharacterRealm::class.java).findAll()
+            val result = realm.where(CharacterRealm::class.java).findAll().sort(sortOrder)
             result.let {
                 allCharacters = realm.copyFromRealm(it)
             }
         }
         return allCharacters
     }
+
+    override fun findCharacterById(id: Int): CharacterRealm? = findById(id)
+
+    override fun deleteCharacter(id: Int): Int = delete(id)
 }

@@ -28,4 +28,28 @@ abstract class DataSource<T : RealmObject>(private val clazz: Class<T>) {
     fun getAll(realm: Realm = Realm.getDefaultInstance()): MutableList<T>? {
         return realm.copyFromRealm(realm.where(clazz).findAll())
     }
+
+    fun findById(id: Int, realm: Realm = Realm.getDefaultInstance()): T? {
+        realm.use {
+            val result = it.where(clazz).equalTo("_id", id).findFirst()
+            return if (result != null) {
+                it.copyFromRealm(result)
+            } else {
+                null
+            }
+        }
+    }
+
+    fun delete(id: Int): Int {
+        var deleteResult = 0
+        Realm.getDefaultInstance().use {
+            val result = it.where(clazz).equalTo("_id", id).findFirst()
+            it.executeTransaction {
+                result?.deleteFromRealm()
+                deleteResult = id
+            }
+        }
+
+        return deleteResult
+    }
 }

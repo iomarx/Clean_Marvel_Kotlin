@@ -1,6 +1,5 @@
 package com.puzzlebench.clean_marvel_kotlin.presentation.mvp
 
-import android.content.ContentUris
 import android.database.Cursor
 import android.os.Bundle
 import android.util.Log
@@ -14,12 +13,12 @@ import com.puzzlebench.clean_marvel_kotlin.presentation.MainActivity
 import com.puzzlebench.clean_marvel_kotlin.presentation.adapter.CharacterAdapter
 import com.puzzlebench.clean_marvel_kotlin.presentation.dialog.CharacterDetailDialog
 import com.puzzlebench.clean_marvel_kotlin.presentation.extension.showToast
-import com.puzzlebench.clean_marvel_kotlin.presentation.provider.CharactersContentProvider
-import com.puzzlebench.clean_marvel_kotlin.presentation.provider.CharactersContentProvider.Companion.COLUMN_DESCRIPTION
-import com.puzzlebench.clean_marvel_kotlin.presentation.provider.CharactersContentProvider.Companion.COLUMN_ID
-import com.puzzlebench.clean_marvel_kotlin.presentation.provider.CharactersContentProvider.Companion.COLUMN_NAME
-import com.puzzlebench.clean_marvel_kotlin.presentation.provider.CharactersContentProvider.Companion.COLUMN_THUMBNAIL_EXTENSION
-import com.puzzlebench.clean_marvel_kotlin.presentation.provider.CharactersContentProvider.Companion.COLUMN_THUMBNAIL_PATH
+import com.puzzlebench.cmk.data.provider.CharactersContentProvider
+import com.puzzlebench.cmk.data.provider.CharactersContentProvider.Companion.COLUMN_DESCRIPTION
+import com.puzzlebench.cmk.data.provider.CharactersContentProvider.Companion.COLUMN_ID
+import com.puzzlebench.cmk.data.provider.CharactersContentProvider.Companion.COLUMN_NAME
+import com.puzzlebench.cmk.data.provider.CharactersContentProvider.Companion.COLUMN_THUMBNAIL_EXTENSION
+import com.puzzlebench.cmk.data.provider.CharactersContentProvider.Companion.COLUMN_THUMBNAIL_PATH
 import com.puzzlebench.cmk.domain.model.Character
 import com.puzzlebench.cmk.domain.model.Thumbnail
 import kotlinx.android.synthetic.main.activity_main.*
@@ -30,11 +29,7 @@ class CharacterView(activity: MainActivity) : LoaderManager.LoaderCallbacks<Curs
     private val activityRef = WeakReference(activity)
 
     private var adapter = CharacterAdapter { character ->
-        // displayCharacterDetail(character)
-        val params = Bundle().apply {
-            putInt(SELECTED_CHARACTER_ARG, character.id)
-        }
-        LoaderManager.getInstance(activity).restartLoader(LOADER_SINGLE_ID, params, this)
+        displayCharacterDetail(character)
     }
 
     private fun displayCharacterDetail(character: Character) {
@@ -49,7 +44,6 @@ class CharacterView(activity: MainActivity) : LoaderManager.LoaderCallbacks<Curs
             it.recycleView.layoutManager = GridLayoutManager(it, SPAN_COUNT)
             it.recycleView.adapter = adapter
             hideLoading()
-            // initializeLoader(it)
         }
     }
 
@@ -99,12 +93,7 @@ class CharacterView(activity: MainActivity) : LoaderManager.LoaderCallbacks<Curs
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
-        val characterId = args?.getInt(SELECTED_CHARACTER_ARG) ?: 0
-        val uri = if (characterId == 0) {
-            CharactersContentProvider.CONTENT_URI
-        } else {
-            ContentUris.withAppendedId(CharactersContentProvider.CONTENT_URI, characterId.toLong())
-        }
+        val uri = CharactersContentProvider.CONTENT_URI
 
         return activityRef.get()?.let {
             CursorLoader(it, uri, null, null, null, COLUMN_NAME)
@@ -114,31 +103,20 @@ class CharacterView(activity: MainActivity) : LoaderManager.LoaderCallbacks<Curs
     }
 
     override fun onLoadFinished(loader: Loader<Cursor>, data: Cursor?) {
-        if (data == null || data.count == 0) {
-            if (loader.id == LOADER_ALL_ID) {
-                showCharacters(emptyList())
-                showToastNoItemToShow()
-            }
-            return
-        }
-
         val characters = extractData(data)
+        showCharacters(characters)
 
-        if (loader.id == LOADER_ALL_ID) {
-            showCharacters(characters)
-        } else {
-            characters.firstOrNull()?.let { safeCharacter ->
-                displayCharacterDetail(safeCharacter)
-            }
+        if (characters.isEmpty()) {
+            showToastNoItemToShow()
         }
     }
 
     override fun onLoaderReset(loader: Loader<Cursor>) = Unit
 
-    private fun extractData(cursor: Cursor): List<Character> {
+    private fun extractData(cursor: Cursor?): List<Character> {
         val characters = mutableListOf<Character>()
 
-        if (cursor.moveToFirst()) {
+        if (cursor?.moveToFirst() == true) {
             do {
                 with(cursor) {
                     val id = getInt(getColumnIndex(COLUMN_ID))
@@ -163,8 +141,6 @@ class CharacterView(activity: MainActivity) : LoaderManager.LoaderCallbacks<Curs
 
     companion object {
         private const val SPAN_COUNT = 1
-        private const val SELECTED_CHARACTER_ARG = "SELECTED_CHARACTER_ARG"
         private const val LOADER_ALL_ID = 0
-        private const val LOADER_SINGLE_ID = 1
     }
 }

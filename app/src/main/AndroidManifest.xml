@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <provider
-            android:name=".presentation.provider.CharactersContentProvider"
+            android:name="com.puzzlebench.cmk.data.provider.CharactersContentProvider"
             android:authorities="com.puzzlebench.clean_marvel_kotlin" />
     </application>
 

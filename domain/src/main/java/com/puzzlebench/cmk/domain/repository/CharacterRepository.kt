@@ -3,6 +3,11 @@ package com.puzzlebench.cmk.domain.repository
 import com.puzzlebench.cmk.domain.model.Character
 
 interface CharacterRepository {
-    fun getAll() : List<Character>
+    fun getAll(sortOrder: String = ""): List<Character>
+
     fun save(c: List<Character>)
+
+    fun findById(id: Int): Character?
+
+    fun delete(id: Int): Int
 }

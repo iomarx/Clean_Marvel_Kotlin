@@ -1,4 +1,4 @@
-package com.puzzlebench.clean_marvel_kotlin.presentation.provider
+package com.puzzlebench.cmk.data.provider
 
 import android.content.ContentProvider
 import android.content.ContentValues
@@ -6,14 +6,27 @@ import android.content.UriMatcher
 import android.database.Cursor
 import android.database.MatrixCursor
 import android.net.Uri
-import com.puzzlebench.cmk.data.model.CharacterRealm
-import io.realm.Realm
+import com.puzzlebench.cmk.data.mapper.repository.CharacterMapperRepository
+import com.puzzlebench.cmk.data.mapper.repository.NullableCharacterMapper
+import com.puzzlebench.cmk.data.mapper.repository.ThumbnailTransform
+import com.puzzlebench.cmk.data.repository.CharacterDataRepository
+import com.puzzlebench.cmk.data.repository.source.CharacterDataSourceImpl
+import com.puzzlebench.cmk.domain.model.Character
+import com.puzzlebench.cmk.domain.repository.CharacterRepository
 
 class CharactersContentProvider : ContentProvider() {
 
     private val uriMatcher = UriMatcher(UriMatcher.NO_MATCH).apply {
         addURI(AUTHORITY, TABLE, ALL_CHARACTERS)
         addURI(AUTHORITY, "$TABLE/#", SINGLE_CHARACTER)
+    }
+
+    private val repository: CharacterRepository by lazy {
+        CharacterDataRepository(
+                CharacterDataSourceImpl(),
+                CharacterMapperRepository(),
+                NullableCharacterMapper(ThumbnailTransform())
+        )
     }
 
     override fun insert(uri: Uri, values: ContentValues?): Uri? {
@@ -39,43 +52,29 @@ class CharactersContentProvider : ContentProvider() {
     ): Cursor? {
         val matrixCursor = MatrixCursor(columns)
 
-        runOnRealm { realm ->
-            val baseQuery = realm.where(CharacterRealm::class.java)
-
-            if (uriMatcher.match(uri) == SINGLE_CHARACTER) {
-                val id = uri.lastPathSegment?.toInt() ?: 0
-                val result = baseQuery.equalTo(COLUMN_ID, id).findFirst()
-                result?.let {
-                    matrixCursor.addRow(characterToArray(it))
-                }
-            } else {
-                val realmResults = baseQuery.findAll().sort(sortOrder)
-
-                realmResults.forEach {
-                    matrixCursor.addRow(characterToArray(it))
-                }
+        if (uriMatcher.match(uri) == SINGLE_CHARACTER) {
+            val id = uri.lastPathSegment?.toInt() ?: 0
+            val result = repository.findById(id)
+            result?.let {
+                matrixCursor.addRow(characterToArray(it))
             }
-            matrixCursor.setNotificationUri(context?.contentResolver, uri)
+        } else {
+            val characters = repository.getAll(sortOrder ?: "")
+            characters.forEach {
+                matrixCursor.addRow(characterToArray(it))
+            }
         }
+
+        matrixCursor.setNotificationUri(context?.contentResolver, uri)
 
         return matrixCursor
     }
 
-    private fun runOnRealm(action: (Realm) -> Unit) {
-        Realm.getDefaultInstance().use {
-            action.invoke(it)
-        }
-    }
-
-    private fun characterToArray(it: CharacterRealm) = arrayOf(
-            it._id, it.name, it.description, it.thumbnail?.path, it.thumbnail?.extension
+    private fun characterToArray(it: Character) = arrayOf(
+            it.id, it.name, it.description, it.thumbnail.path, it.thumbnail.extension
     )
 
     override fun onCreate(): Boolean {
-        context?.let {
-            Realm.init(it)
-        }
-
         return true
     }
 
@@ -91,22 +90,13 @@ class CharactersContentProvider : ContentProvider() {
     override fun delete(uri: Uri, selection: String?, selectionArgs: Array<String>?): Int {
         if (uriMatcher.match(uri) != SINGLE_CHARACTER) return 0
 
-        var deleteCount = 0
-
-        runOnRealm { realm ->
-            val id = uri.lastPathSegment?.toInt() ?: 0
-            val result = realm.where(CharacterRealm::class.java).equalTo(COLUMN_ID, id).findFirst()
-            realm.executeTransaction {
-                result?.deleteFromRealm()
-                deleteCount++
-            }
-        }
-
-        if (deleteCount > 0) {
+        val id = uri.lastPathSegment?.toInt() ?: 0
+        val deleteResult = repository.delete(id)
+        if (deleteResult > 0) {
             context?.contentResolver?.notifyChange(uri, null)
         }
 
-        return deleteCount
+        return deleteResult
     }
 
     override fun getType(uri: Uri): String? {

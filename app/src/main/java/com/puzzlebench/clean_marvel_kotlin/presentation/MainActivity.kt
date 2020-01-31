@@ -6,18 +6,24 @@ import com.puzzlebench.clean_marvel_kotlin.presentation.base.BaseRxActivity
 import com.puzzlebench.clean_marvel_kotlin.presentation.mvp.CharacterPresenter
 import com.puzzlebench.clean_marvel_kotlin.presentation.mvp.CharacterView
 import com.puzzlebench.cmk.data.mapper.repository.CharacterMapperRepository
+import com.puzzlebench.cmk.data.mapper.repository.NullableCharacterMapper
+import com.puzzlebench.cmk.data.mapper.repository.ThumbnailTransform
 import com.puzzlebench.cmk.data.repository.CharacterDataRepository
 import com.puzzlebench.cmk.data.repository.source.CharacterDataSourceImpl
 import com.puzzlebench.cmk.data.service.CharacterServicesImpl
 import com.puzzlebench.cmk.domain.usecase.GetCharacterRepositoryUseCase
 import com.puzzlebench.cmk.domain.usecase.GetCharacterServiceUseCase
 import com.puzzlebench.cmk.domain.usecase.SaveCharacterRepositoryUseCase
-import kotlinx.android.synthetic.main.activity_main.fab_refresh
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseRxActivity() {
 
     private val characterService = CharacterServicesImpl()
-    private val characterRepository = CharacterDataRepository(CharacterDataSourceImpl(), CharacterMapperRepository())
+    private val characterRepository = CharacterDataRepository(
+            CharacterDataSourceImpl(),
+            CharacterMapperRepository(),
+            NullableCharacterMapper(ThumbnailTransform())
+    )
 
     private val getCharacterServiceUseCase = GetCharacterServiceUseCase(characterService)
     private val getCharacterRepositoryUseCase = GetCharacterRepositoryUseCase(characterRepository)

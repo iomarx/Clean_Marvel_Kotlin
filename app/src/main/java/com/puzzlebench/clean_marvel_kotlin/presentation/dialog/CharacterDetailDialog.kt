@@ -10,7 +10,7 @@ import com.puzzlebench.clean_marvel_kotlin.presentation.base.BaseRxDialog
 import com.puzzlebench.clean_marvel_kotlin.presentation.mvp.CharacterDetailContract
 import com.puzzlebench.clean_marvel_kotlin.presentation.mvp.CharacterDetailPresenter
 import com.puzzlebench.clean_marvel_kotlin.presentation.mvp.CharacterDetailView
-import com.puzzlebench.clean_marvel_kotlin.presentation.provider.CharactersContentProvider
+import com.puzzlebench.cmk.data.provider.CharactersContentProvider
 import com.puzzlebench.cmk.data.service.CharacterServicesImpl
 import com.puzzlebench.cmk.domain.service.CharacterServices
 import com.puzzlebench.cmk.domain.usecase.GetSingleCharacterUseCase

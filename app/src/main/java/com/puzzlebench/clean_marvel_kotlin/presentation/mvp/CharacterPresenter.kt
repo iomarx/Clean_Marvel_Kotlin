@@ -45,9 +45,8 @@ class CharacterPresenter constructor(
                         view.showToastNoItemToShow()
                     } else {
                         saveCharacterRepositoryUseCase.invoke(characters)
-                        //view.showCharacters(characters)
+                        view.restartLoader()
                     }
-                    view.restartLoader()
                 }, { e ->
                     view.showToastNetworkError(e.message.toString())
                 })
