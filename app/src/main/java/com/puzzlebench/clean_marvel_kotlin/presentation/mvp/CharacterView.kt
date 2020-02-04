@@ -43,6 +43,7 @@ class CharacterView(activity: MainActivity) : LoaderManager.LoaderCallbacks<Curs
             it.recycleView.layoutManager = GridLayoutManager(it, SPAN_COUNT)
             it.recycleView.adapter = adapter
             hideLoading()
+            LoaderManager.getInstance(it).initLoader(LOADER_ALL_ID, null, this)
         }
     }
 
@@ -79,16 +80,9 @@ class CharacterView(activity: MainActivity) : LoaderManager.LoaderCallbacks<Curs
         }
     }
 
-    fun initializeLoader() {
-        runSafely {
-            LoaderManager.getInstance(it).initLoader(LOADER_ALL_ID, null, this)
-        }
-    }
-
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
-        val uri = CharactersContentProvider.CONTENT_URI
-
         return activityRef.get()?.let {
+            val uri = CharactersContentProvider.CONTENT_URI
             CursorLoader(it, uri, null, null, null, COLUMN_NAME)
         } ?: run {
             throw Exception("Invalid activity")
@@ -117,7 +111,7 @@ class CharacterView(activity: MainActivity) : LoaderManager.LoaderCallbacks<Curs
                     val description = getString(getColumnIndex(COLUMN_DESCRIPTION))
                     val thumbnailPath = getString(getColumnIndex(COLUMN_THUMBNAIL_PATH))
                     val thumbnailExtension = getString(getColumnIndex(COLUMN_THUMBNAIL_EXTENSION))
-                    
+
                     characters.add(Character(
                             id,
                             name,

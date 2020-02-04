@@ -11,7 +11,7 @@ class CharacterDataSourceImpl : DataSource<CharacterRealm>(CharacterRealm::class
     }
 
     override fun getAllCharacters(sortOrder: String): List<CharacterRealm> {
-        var allCharacters: List<CharacterRealm> = arrayListOf()
+        var allCharacters: List<CharacterRealm> = listOf()
         Realm.getDefaultInstance().use { realm ->
             val result = realm.where(CharacterRealm::class.java).findAll().sort(sortOrder)
             result.let {

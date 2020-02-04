@@ -16,7 +16,6 @@ class CharacterPresenter constructor(
 
     fun init() {
         view.init()
-        view.initializeLoader()
     }
 
     fun requestCharacters() {
