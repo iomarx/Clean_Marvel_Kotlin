@@ -6,7 +6,7 @@ import io.realm.annotations.PrimaryKey
 
 open class CharacterRealm(
         @PrimaryKey
-        var id: Int = 0,
+        var _id: Int = 0,
         var name: String? = null,
         var description: String? = null,
         var thumbnail: ThumbnailRealm? = null

@@ -2,6 +2,7 @@ package com.puzzlebench.clean_marvel_kotlin.presentation.mvp
 
 import android.view.View
 import android.widget.Toast
+import com.puzzlebench.clean_marvel_kotlin.R
 import com.puzzlebench.clean_marvel_kotlin.presentation.dialog.CharacterDetailDialog
 import com.puzzlebench.clean_marvel_kotlin.presentation.extension.getImageByUrl
 import com.puzzlebench.cmk.domain.model.Character
@@ -27,6 +28,7 @@ class CharacterDetailView(dialog: CharacterDetailDialog) : CharacterDetailContra
     override fun displayCharacterDetail(character: Character) {
         dialogRef.get()?.let { dialog ->
             with(character) {
+                dialog.button_delete.visibility = View.VISIBLE
                 dialog.image_character_picture.getImageByUrl(thumbnail.url)
                 dialog.text_name.text = name
                 dialog.text_description.text = description
@@ -36,5 +38,13 @@ class CharacterDetailView(dialog: CharacterDetailDialog) : CharacterDetailContra
 
     override fun displayError(error: Throwable) {
         Toast.makeText(dialogRef.get()?.context, error.message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun deleteSuccess() {
+        dialogRef.get()?.dismiss()
+    }
+
+    override fun deleteFailed() {
+        Toast.makeText(dialogRef.get()?.context, R.string.message_delete_error, Toast.LENGTH_SHORT).show()
     }
 }

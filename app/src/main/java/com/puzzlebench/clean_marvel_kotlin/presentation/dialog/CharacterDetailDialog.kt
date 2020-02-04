@@ -9,9 +9,15 @@ import com.puzzlebench.clean_marvel_kotlin.presentation.base.BaseRxDialog
 import com.puzzlebench.clean_marvel_kotlin.presentation.mvp.CharacterDetailContract
 import com.puzzlebench.clean_marvel_kotlin.presentation.mvp.CharacterDetailPresenter
 import com.puzzlebench.clean_marvel_kotlin.presentation.mvp.CharacterDetailView
+import com.puzzlebench.cmk.data.mapper.repository.CharacterMapperRepository
+import com.puzzlebench.cmk.data.repository.CharacterContentProviderRepository
+import com.puzzlebench.cmk.data.repository.source.CharacterDataSourceImpl
 import com.puzzlebench.cmk.data.service.CharacterServicesImpl
+import com.puzzlebench.cmk.domain.repository.CharacterRepository
 import com.puzzlebench.cmk.domain.service.CharacterServices
+import com.puzzlebench.cmk.domain.usecase.DeleteCharacterUseCase
 import com.puzzlebench.cmk.domain.usecase.GetSingleCharacterUseCase
+import kotlinx.android.synthetic.main.dialog_character_detail.*
 
 class CharacterDetailDialog : BaseRxDialog() {
 
@@ -19,10 +25,19 @@ class CharacterDetailDialog : BaseRxDialog() {
         CharacterServicesImpl()
     }
 
+    private val characterRepository: CharacterRepository by lazy {
+        CharacterContentProviderRepository(
+                activity,
+                CharacterMapperRepository(),
+                CharacterDataSourceImpl()
+        )
+    }
+
     private val presenter: CharacterDetailContract.Presenter by lazy {
         CharacterDetailPresenter(
                 CharacterDetailView(this),
                 GetSingleCharacterUseCase(characterService),
+                DeleteCharacterUseCase(characterRepository),
                 subscriptions
         )
     }
@@ -42,6 +57,10 @@ class CharacterDetailDialog : BaseRxDialog() {
 
         val characterId = arguments?.getInt(ARGUMENT_CHARACTER_ID) ?: 0
         presenter.getCharacterDetail(characterId)
+
+        button_delete.setOnClickListener {
+            presenter.deleteCharacter(characterId)
+        }
     }
 
     companion object {
